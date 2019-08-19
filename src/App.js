@@ -1,26 +1,46 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import Output from './components/Output'
+import Form from './components/Form'
+import apiCall from './data'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  state = {
+    input: '77027',
+    data: {}
+  }
+
+  componentDidMount = async () => {
+    const data = await apiCall(this.state.input);
+    console.log(data)
+    this.setState(prevState => ({
+      data: data
+    }));
+  };
+
+  handleSubmit = async (input) => {
+    await this.setState(prevState => ({
+      input: input
+    }));
+    const data = await apiCall(this.state.input);
+    this.setState(prevState => ({
+      data: data
+    }));
+  };
+
+  render () {
+    return (
+      <div className="App">
+      <h1>Weather App</h1>
+        <Form
+        handleSubmit={this.handleSubmit}
+        />
+        <Output
+        data={this.state.data}
+        />
+      </div>
+    );
+  }
 }
 
 export default App;
